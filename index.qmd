@@ -712,7 +712,8 @@ theme_minimal()
 
 # .Ejercicio 6 - Diferencia de las medias de dos poblaciones (varianzas desconocidas y distintas)
 
-Se registraron los siguientes datos, en minutos, que tardan algunos hombres y mujeres en realizar cierta actividad en una empresa, los cuales fueron seleccionados aleatoriamente. HOMBRES MUJERES
+
+Se registraron los siguientes datos, en minutos, que tardan algunos hombres y mujeres en realizar cierta actividad en una empresa, los cuales fueron seleccionados aleatoriamente. HOMBRES, MUJERES
 
 n1=14 n2=25
 
