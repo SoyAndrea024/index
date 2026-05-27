@@ -1,0 +1,1058 @@
+---
+title: "TALLER ESTIMACION DE PARAMETROS"  # Título principal del documento
+subtitle: "Ejercicios"  # Subtítulo del documento
+date: today  # Fecha actual en formato español
+author:  # Información sobre los autores
+  - name: Luz Andrea Lotero Jerez<br>German Mauricio Duarte Rodríguez<br>Wilson Ávila Barreto # Nombres de los autores, separados por <br> para salto de línea en HTML
+    affiliation: "Escuela De Administracion Publica"  # Afiliación de los autores (nombre de la universidad)
+    affiliation-url: "https://www.esap.edu.co/"  # URL que lleva a la página web de la universidad
+lang: es  # Idioma del documento, en este caso en español
+title-block-banner: "#7df0bc"
+format:
+  html:  # Formato de salida en HTML
+    page-layout: full  # Configura el diseño de la página para usar el ancho completo
+    fontsize: 14pt  # Tamaño de la fuente del documento (16 puntos)
+    toc: true  # Activa la tabla de contenido
+    toc-location: right  # Ubicación de la tabla de contenido (a la izquierda)
+    number-sections: true  # Activa la numeración de las secciones
+    code-fold: true  # Permite ocultar el código, mostrando solo un resumen con "Ver código"
+    code-summary: "Ver código"  # El texto mostrado para los resúmenes de código oculto
+    html-math-method: katex  # Usa Katex para representar las fórmulas matemáticas en HTML
+    smooth-scroll: true  # Activa el desplazamiento suave al navegar por la página
+    link-external-icon: true  # Muestra un ícono en los enlaces externos
+    link-external-newwindow: true  # Los enlaces externos se abren en una nueva ventana
+    citations-hover: true  # Activa el efecto hover (desplegar) en las citas
+    footnotes-hover: true  # Activa el efecto hover (desplegar) en las notas al pie
+    theme: "dark"  # Opción de tema alternativo con mayor contraste
+    highlight-style: "Monokai"  # Resaltado de código con contraste
+    code-overflow: "scroll"  # Controla desbordamiento de código en pantallas pequeñas
+    favicon: "favicon.ico"  # Favicon para el sitio web
+    background-color: "#EDA698"  # Fondo azul baby para todo el documento
+    text-align: justify  # Alineación justificada para el texto
+    color: "#333333"  # Color del texto (gris oscuro para mejorar la legibilidad)
+    link-color: "#3892f8"  # Color de los enlaces (azul)
+    heading-color: "#3892f8"  # Color de los encabezados (azul)
+editor: visual  # Usa el editor visual para la creación del documento en RStudio
+knitr:
+  opts_chunk:  # Opciones predeterminadas para los bloques de código (chunks) de R
+    message: false  # Mostrar mensajes generados por el código
+    warning: false  # Mostrar advertencias si es necesario
+    fig.align: "center"  # Alinea las figuras generadas al centro
+    fig.width: 6  # Ajusta el tamaño de las figuras a 6 unidades
+    fig.height: 6  # Ajusta la altura de las figuras a 6 unidades
+    out.width: "70%"  # Asegura que las figuras se adapten al 70% del ancho disponible
+---
+
+```{=html}
+<div style="position: absolute; top: 10px; right: 10px;">
+  <img src="Logo_Esap.png" alt="Logo Universidad del Tolima" style="width: 150px; height: auto;">
+</div>
+```
+
+```{=html}
+<style type="text/css">
+  body {
+    font-size: 130%;
+    text-align: justify;
+  }
+</style>
+```
+
+# Paquetes
+
+```{r}
+# Verificar, instalar y activar el paquete "tidyverse"
+if (!require(tidyverse)) {
+  install.packages("tidyverse")
+}
+library(tidyverse)
+
+# Verificar, instalar y activar el paquete "kableExtra"
+if (!require(kableExtra)) {
+  install.packages("kableExtra")
+}
+library(kableExtra)
+
+# Verificar, instalar y activar el paquete "ggplot2"
+if (!require(ggplot2)) {
+  install.packages("ggplot2")
+}
+library(ggplot2)
+```
+
+# Resumen de Intervalos de Confianza
+
+Los intervalos de confianza permiten estimar un parámetro poblacional mediante un rango de valores con cierto nivel de confianza.
+
+Para distribuciones simétricas:
+
+$$\hat{\theta} \pm MoE$$
+
+donde:
+
+- $(\hat{\theta})$: estimador muestral
+- $(MoE)$: margen de error
+- $(SE)$: error estándar
+- $(1-\alpha)$: nivel de confianza
+
+El margen de error se calcula como:
+
+$$MoE = SE \cdot \text{valor crítico}$$
+
+# 1. Media poblacional con varianza conocida
+
+Se utiliza la distribución normal $(Z)$.
+
+$\bar{x} \pm z_{\alpha/2}\frac{\sigma}{\sqrt{n}}$
+
+**Supuestos**
+
+- Varianza poblacional conocida.
+- Muestra aleatoria.
+- Población normal o muestra grande.
+
+**Ejemplo**
+
+Peso promedio de dispositivos electrónicos.
+
+- $(n=50)$
+- $(\bar{x}=75)$
+- $(\sigma^2=25)$
+- Nivel de confianza: 95%
+
+Intervalo:
+
+$$[73.6141,\ 76.3859]$$
+
+**Interpretación**
+
+Con 95% de confianza, la media poblacional del peso está entre 73.61 y 76.39 gramos.
+
+# 2. Media poblacional con varianza desconocida
+
+Se utiliza la distribución t de Student.
+
+$$\bar{x} \pm t_{(\alpha/2,n-1)}\frac{s}{\sqrt{n}}$$
+
+**Supuestos**
+
+- Varianza poblacional desconocida.
+- Datos aproximadamente normales.
+- Muestra aleatoria.
+
+**Ejemplo**
+
+Pesos de 10 dispositivos electrónicos.
+
+Intervalo:
+
+$$72.61414,\ 77.78586$$
+
+**Interpretación**
+
+Con 95% de confianza, la media verdadera está entre 72.61 y 77.79 gramos.
+
+# 3. Proporción poblacional
+
+$$\hat{p} \pm z_{\alpha/2}\sqrt{\frac{\hat{p}(1-\hat{p})}{n}}$$
+
+**Supuestos**
+
+- Muestra aleatoria.
+- $(n\hat{p} \ge 5)$
+- $(n(1-\hat{p}) \ge 5)$
+
+**Ejemplo**
+
+Encuesta de preferencia de producto.
+
+- $(n=200)$
+- 150 prefieren el producto.
+
+Intervalo al 99%:
+
+$$0.671,\ 0.829$$
+
+**Interpretación**
+
+La proporción verdadera de personas que prefieren el producto está entre 67.1% y 82.9%.
+
+# 4. Varianza poblacional
+
+Basado en la distribución chi-cuadrado.
+
+Límite inferior:
+
+$$L_i=\frac{(n-1)s^2}{\chi^2_{(\alpha/2,n-1)}}$$
+
+Límite superior:
+
+$$L_s=\frac{(n-1)s^2}{\chi^2_{(1-\alpha/2,n-1)}}$$
+
+**Supuestos**
+
+- Población normal.
+- Muestra aleatoria.
+
+**Ejemplo**
+
+Peso de bolígrafos.
+
+Varianza muestral:
+
+$$s^2=0.0005771264$$
+
+Intervalo al 95%:
+
+$$0.0003660505,\ 0.001042973$$
+
+**Interpretación**
+
+La varianza verdadera del peso de los bolígrafos está entre 0.000366 y 0.001043.
+
+# 5. Diferencia de medias pareadas
+
+Se trabaja con diferencias:
+
+$$d_i = X_{antes} - X_{después}$$
+
+Intervalo:
+
+$$\bar{d} \pm t_{(\alpha/2,n-1)}\frac{s_d}{\sqrt{n}}$$
+
+**Supuestos**
+
+- Diferencias aproximadamente normales.
+- Datos pareados.
+- Muestra aleatoria.
+
+**Ejemplo**
+
+Presión arterial antes y después de tratamiento.
+
+Resultados:
+
+- Media diferencias: $(7.6)$
+- Desviación estándar: $(1.264911)$
+
+Intervalo:
+
+$$6.695137,\ 8.504863$$
+
+**Interpretación**
+
+El tratamiento reduce la presión arterial entre 6.70 y 8.50 mmHg aproximadamente.
+
+Como el intervalo no contiene el 0, existe diferencia significativa.
+
+# 6. Diferencia de medias independientes
+
+**Caso A: Varianzas conocidas**
+
+$$(\bar{X}_1-\bar{X}*2) \pm Z*{\alpha/2}\sqrt{\frac{\sigma_1^2}{n_1}+\frac{\sigma_2^2}{n_2}}$$
+
+**Supuestos**
+
+- Muestras independientes.
+- Varianzas conocidas.
+- Poblaciones normales o muestras grandes.
+
+**Ejemplo**
+
+Curso virtual vs presencial.
+
+Intervalo:
+
+$$1.421546,\ 8.578454$$
+
+**Interpretación**
+
+Los estudiantes del curso virtual obtienen entre 1.42 y 8.58 puntos más.
+
+**Caso B: Varianzas desconocidas pero iguales**
+
+Primero se verifica si las varianzas pueden considerarse iguales mediante el intervalo para:
+
+$$\frac{\sigma_1^2}{\sigma_2^2}$$
+
+Si el intervalo contiene 1, se consideran iguales.
+
+**Ejemplo**
+
+Intervalo para cociente de varianzas:
+
+$$0.2703474,\ 4.137484$$
+
+Como contiene 1:
+
+- Varianzas iguales.
+
+Intervalo para diferencia de medias:
+
+$$1.263404,\ 10.00326$$
+
+**Interpretación**
+
+Existe diferencia significativa entre ambos grupos.
+
+**Caso C: Varianzas desconocidas y diferentes**
+
+Cuando el intervalo del cociente de varianzas NO contiene 1.
+
+Se utiliza la aproximación de Welch.
+
+**Supuestos**
+
+- Muestras independientes.
+- Normalidad aproximada.
+- Varianzas distintas.
+
+# 7. Diferencia de dos proporciones
+
+$$(\hat{p}_1-\hat{p}*2) \pm z*{\alpha/2}\sqrt{\frac{\hat{p}_1(1-\hat{p}_1)}{n_1}+\frac{\hat{p}_2(1-\hat{p}_2)}{n_2}}$$
+
+**Supuestos**
+
+- Muestras independientes.
+- Tamaños suficientemente grandes.
+- Muestras aleatorias.
+
+**Ejemplo**
+
+Clientes satisfechos en dos tiendas.
+
+Intervalo:
+
+$$-0.0822251,\ 0.0822251$$
+
+**Interpretación**
+
+El intervalo contiene 0, por lo tanto no existe evidencia suficiente para afirmar diferencias significativas entre las proporciones de satisfacción de ambas tiendas.
+
+# 8. Intervalo de confianza para la proporción de la población
+
+Se utiliza cuando queremos estimar el porcentaje o proporción de individuos que poseen cierta característica.
+
+**Fórmula**
+
+$$\hat{p} \pm z_{\alpha/2}\sqrt{\frac{\hat{p}(1-\hat{p})}{n}}$$
+
+donde:
+
+- $(\hat{p})$: proporción muestral
+- $(n)$: tamaño de muestra
+- $(z_{\alpha/2})$: valor crítico de la normal estándar
+
+**Ejemplo**
+
+En una encuesta a 400 personas, 260 afirmaron preferir una marca de café.
+
+- $(n=400)$
+- $(x=260)$
+- $(\hat{p}=260/400=0.65)$
+
+Nivel de confianza: 95%.
+
+**Resultado**
+
+$$IC=0.6033,\ 0.6967$$
+
+**Interpretación**
+
+Con 95% de confianza, la verdadera proporción de personas que prefieren la marca de café está entre 60.33% y 69.67%.
+
+# 9. Intervalo de confianza para la varianza de la población
+
+Se utiliza para estimar la variabilidad poblacional.
+
+**Fórmulas**
+
+Límite inferior:
+
+$$L_i=\frac{(n-1)s^2}{\chi^2_{(\alpha/2,n-1)}}$$
+
+Límite superior:
+
+$$L_s=\frac{(n-1)s^2}{\chi^2_{(1-\alpha/2,n-1)}}$$
+
+donde:
+
+- $(s^2)$: varianza muestral
+- $(n)$: tamaño de muestra
+
+**Ejemplo**
+
+Se toma una muestra de 20 baterías y se obtiene:
+
+- $(s^2=16)$
+- $(n=20)$
+
+Nivel de confianza: 95%.
+
+**Resultado**
+
+$$IC=9.14,\ 34.58$$
+
+**Interpretación**
+
+Con 95% de confianza, la verdadera varianza poblacional está entre 9.14 y 34.58.
+
+# 10. Intervalo de confianza para el cociente de las varianzas de dos poblaciones
+
+Permite comparar la dispersión entre dos poblaciones.
+
+**Fórmula**
+
+$$\frac{s_1^2/s_2^2}{F_{(1-\alpha/2,n_1-1,n_2-1)}} < \frac{\sigma_1^2}{\sigma_2^2} < \frac{s_1^2/s_2^2}{F_{(\alpha/2,n_1-1,n_2-1)}}$$
+
+donde:
+
+- $(s_1^2,s_2^2)$: varianzas muestrales
+- $(F)$: distribución F de Fisher
+
+**Ejemplo**
+
+Dos máquinas producen piezas metálicas.
+
+- Máquina A: $(n_1=15,\ s_1^2=25)$
+- Máquina B: $(n_2=12,\ s_2^2=10)$
+
+Nivel de confianza: 95%.
+
+**Resultado**
+
+$$IC=0.76,\ 8.91$$
+
+**Interpretación**
+
+Como el intervalo contiene al número 1, no hay evidencia suficiente para afirmar que las varianzas poblacionales sean diferentes.
+
+# 11. Intervalo de confianza para la diferencia de proporciones de dos poblaciones
+
+Se utiliza para comparar porcentajes entre dos grupos.
+
+**Fórmula**
+
+$$(\hat{p}_1-\hat{p}*2) \pm z*{\alpha/2}\sqrt{\frac{\hat{p}_1(1-\hat{p}_1)}{n_1}+\frac{\hat{p}_2(1-\hat{p}_2)}{n_2}}$$
+
+**Ejemplo**
+
+Se comparan dos métodos de enseñanza.
+
+- Grupo A: 90 de 150 aprobaron.
+- Grupo B: 70 de 140 aprobaron.
+
+Entonces:
+
+$$\hat{p}_1=0.60$$
+
+$$\hat{p}_2=0.50$$
+
+Nivel de confianza: 95%.
+
+**Resultado**
+
+$$IC=[-0.010,\ 0.210]$$
+
+**Interpretación**
+
+Como el intervalo contiene el 0, no existe evidencia suficiente para afirmar una diferencia significativa entre las proporciones de aprobación de ambos métodos.
+
+# .Ejercicio 1 - Media de la población (varianza poblacional conocida)
+
+Un fabricante produce anillos para los pistones de un motor de automóvil. Se sabe que el diámetro del anillo esta distribuido aproximadamente de manera normal, y que tiene una desviación estándar = 0.001 mm. Una muestra aleatoria de 15 anillos tiene un diámetro promedio de x = 74.036 mm. Construya un intervalo de confianza bilateral del 99% para el diámetro promedio del anillo. Asuma normalidad en los datos
+
+::: panel-tabset
+## RESPUESTA
+
+```{r}
+# Datos
+x_barra <- 74.036
+sigma <- 0.001
+n <- 15
+alpha <- 0.01
+
+# Valor crítico
+z <- qnorm(1-alpha/2)
+
+# Error estándar
+EE <- sigma/sqrt(n)
+
+# Intervalo
+LI <- x_barra - z*EE
+LS <- x_barra + z*EE
+
+# Respuesta
+cat("IC =", LI, ",", LS)
+```
+
+## GRÁFICA
+
+```{r}
+confianza <- 0.99
+alpha <- 1-confianza
+z <- qnorm(1-alpha/2)
+
+x <- seq(-4,4,length=1000)
+
+df <- data.frame(x=x,y=dnorm(x))
+
+sombra <- subset(df,x>=-z & x<=z)
+
+ggplot(df,aes(x,y))+
+geom_line(color="darkgreen",size=1.2)+
+geom_area(data=sombra,fill="lightgreen",alpha=0.8)+
+geom_vline(xintercept=c(-z,z),linetype="dashed")+
+labs(title="IC 99% Distribución Normal Z")+
+theme_minimal()
+```
+:::
+
+# .Ejercicio 2 - Media de la población (varianza poblacional conocida)
+
+Se sabe que la duración, en horas, de un foco de 75 watts tiene una distribución aproximadamente normal, con una desviación estándar de = 25 horas. Se toma una muestra aleatoria de 20 focos, la cual resulta tener una duración promedio de x = 1014 horas. Construya un intervalo de confianza bilateral del 95% para la duración promedio.
+
+::: panel-tabset
+## RESPUESTA
+
+```{r}
+# Datos
+x_barra <- 1014
+sigma <- 25
+n <- 20
+alpha <- 0.05
+
+z <- qnorm(1-alpha/2)
+
+EE <- sigma/sqrt(n)
+
+LI <- x_barra - z*EE
+LS <- x_barra + z*EE
+
+cat("IC =", LI, ",", LS)
+```
+
+## GRÁFICA
+
+```{r}
+confianza <- 0.95
+alpha <- 1-confianza
+z <- qnorm(1-alpha/2)
+
+x <- seq(-4,4,length=1000)
+
+df <- data.frame(x=x,y=dnorm(x))
+
+sombra <- subset(df,x>=-z & x<=z)
+
+ggplot(df,aes(x,y))+
+geom_line(color="darkblue",size=1.2)+
+geom_area(data=sombra,fill="skyblue",alpha=0.8)+
+geom_vline(xintercept=c(-z,z),linetype="dashed")+
+labs(title="IC 95% Distribución Normal")+
+theme_minimal()
+```
+:::
+
+# .Ejercicio 3 - Media de la población (varianza poblacional desconocida)
+
+En un estudio hecho para determinar el tiempo medio necesario para el montaje de cierta pieza de una maquina, 40 trabajadores hicieron un promedio de 42.5 minutos con una desviación típica de 3.8 minutos: Usar los datos para construir un intervalo de confianza de 98% de tiempo promedio verdadero necesario para montar la maquina.
+
+::: panel-tabset
+## RESPUESTA
+
+```{r}
+# Datos
+x_barra <- 42.5
+s <- 3.8
+n <- 40
+alpha <- 0.02
+
+t <- qt(1-alpha/2,df=n-1)
+
+EE <- s/sqrt(n)
+
+LI <- x_barra - t*EE
+LS <- x_barra + t*EE
+
+cat("IC =", LI, ",", LS)
+```
+
+## GRÁFICA
+
+```{r}
+confianza <- 0.98
+alpha <- 1-confianza
+gl <- 39
+
+t <- qt(1-alpha/2,df=gl)
+
+x <- seq(-5,5,length=1000)
+
+df <- data.frame(x=x,y=dt(x,df=gl))
+
+sombra <- subset(df,x>=-t & x<=t)
+
+ggplot(df,aes(x,y))+
+geom_line(color="purple",size=1.2)+
+geom_area(data=sombra,fill="plum",alpha=0.8)+
+geom_vline(xintercept=c(-t,t),linetype="dashed")+
+labs(title="Distribución t Student")+
+theme_minimal()
+```
+:::
+
+# .Ejercicio 4 - Media de la población (varianza poblacional desconocida)
+
+El tiempo(en minutos) que tardaron 15 operarios para familiarizarse con el manejo de una máquina moderna adquirida por la empresa fue: 3,4, 2,8, 4,4, 2,5, 3,3, 4, 4,8, 2,9, 5,6, 5,2, 3,7, 3, 3,6, 2,8,4,8. Suponga que los tiempos se distribuyen normalmente. Determine e interprete un intervalo del 95% de confianza para el verdadero tiempo promedio
+
+::: panel-tabset
+## RESPUESTA
+
+```{r}
+# Datos
+datos <- c(3.4,2.8,4.4,2.5,3.3,4.0,4.8,
+           2.9,5.6,5.2,3.7,3.0,3.6,2.8,4.8)
+
+n <- length(datos)
+
+x_barra <- mean(datos)
+
+s <- sd(datos)
+
+alpha <- 0.05
+
+t <- qt(1-alpha/2,df=n-1)
+
+EE <- s/sqrt(n)
+
+LI <- x_barra - t*EE
+LS <- x_barra + t*EE
+
+cat("IC =", LI, ",", LS)
+```
+
+## GRÁFICA
+
+```{r}
+confianza <- 0.95
+alpha <- 1-confianza
+gl <- 14
+
+t <- qt(1-alpha/2,df=gl)
+
+x <- seq(-5,5,length=1000)
+
+df <- data.frame(x=x,y=dt(x,df=gl))
+
+sombra <- subset(df,x>=-t & x<=t)
+
+ggplot(df,aes(x,y))+
+geom_line(color="darkred",size=1.2)+
+geom_area(data=sombra,fill="salmon",alpha=0.8)+
+geom_vline(xintercept=c(-t,t),linetype="dashed")+
+labs(title="IC 95% t Student")+
+theme_minimal()
+```
+:::
+
+# .Ejercicio 5 - Diferencia de las medias de dos poblaciones (varianzas conocidas)
+
+Se desea medir la diferencia entre dos categorías de empleados en la actividad de seguros. Una est formada por personas con título superior y la otra por personas que sólo tienen estudios secundarios. Tomamos una muestra de 45 empleados entre los primeros y la media de ventas resulta ser 32. Tomamos 60 empleados del segundo grupo y la media es 25. Suponga que las ventas de los dos grupos se distribuyen normalmente con varianzas de 48 para los titulados superiores y 56 para los de estudios secundarios. Calcule e interprete un intervalo del 90% de confianza para la verdadera diferencia de las medias.
+
+::: panel-tabset
+## RESPUESTA
+
+```{r}
+# Datos
+x1 <- 32
+x2 <- 25
+
+n1 <- 45
+n2 <- 60
+
+sigma1 <- 48
+sigma2 <- 56
+
+alpha <- 0.10
+
+z <- qnorm(1-alpha/2)
+
+EE <- sqrt((sigma1/n1)+(sigma2/n2))
+
+dif <- x1 - x2
+
+LI <- dif - z*EE
+LS <- dif + z*EE
+
+cat("IC =", LI, ",", LS)
+```
+
+## GRÁFICA
+
+```{r}
+confianza <- 0.90
+alpha <- 1-confianza
+z <- qnorm(1-alpha/2)
+
+x <- seq(-4,4,length=1000)
+
+df <- data.frame(x=x,y=dnorm(x))
+
+sombra <- subset(df,x>=-z & x<=z)
+
+ggplot(df,aes(x,y))+
+geom_line(color="brown",size=1.2)+
+geom_area(data=sombra,fill="orange",alpha=0.8)+
+geom_vline(xintercept=c(-z,z),linetype="dashed")+
+labs(title="Diferencia de medias Z")+
+theme_minimal()
+```
+:::
+
+# .Ejercicio 6 - Diferencia de las medias de dos poblaciones (varianzas desconocidas y distintas)
+
+
+Se registraron los siguientes datos, en minutos, que tardan algunos hombres y mujeres en realizar cierta actividad en una empresa, los cuales fueron seleccionados aleatoriamente. HOMBRES, MUJERES
+
+n1=14 n2=25
+
+Media=17
+
+Media=19
+
+Varianza=1,5
+
+Varianza=1,8
+
+::: panel-tabset
+## RESPUESTA
+
+```{r}
+# Datos
+x1 <- 17
+x2 <- 19
+
+s1 <- 1.5
+s2 <- 1.8
+
+n1 <- 14
+n2 <- 25
+
+alpha <- 0.05
+
+EE <- sqrt((s1/n1)+(s2/n2))
+
+gl <- (((s1/n1)+(s2/n2))^2)/
+      ((((s1/n1)^2)/(n1-1))+
+      (((s2/n2)^2)/(n2-1)))
+
+t <- qt(1-alpha/2,df=gl)
+
+dif <- x1 - x2
+
+LI <- dif - t*EE
+LS <- dif + t*EE
+
+cat("IC =", LI, ",", LS)
+```
+
+## GRÁFICA
+
+```{r}
+confianza <- 0.95
+alpha <- 1-confianza
+gl <- 30
+
+t <- qt(1-alpha/2,df=gl)
+
+x <- seq(-5,5,length=1000)
+
+df <- data.frame(x=x,y=dt(x,df=gl))
+
+sombra <- subset(df,x>=-t & x<=t)
+
+ggplot(df,aes(x,y))+
+geom_line(color="darkgreen",size=1.2)+
+geom_area(data=sombra,fill="lightgreen",alpha=0.8)+
+geom_vline(xintercept=c(-t,t),linetype="dashed")+
+labs(title="Varianzas distintas")+
+theme_minimal()
+```
+:::
+
+# .Ejercicio 7 - Diferencia de las medias de dos poblaciones (varianzas desconocidas e iguales)
+
+Suponga que los tiempos para los dos grupos se distribuyen normalmente y que las varianzas son iguales, aunque desconocidas. Calcule e interprete un intervalo de confianza del 99% para la verdadera diferencia de medias.
+
+::: panel-tabset
+## RESPUESTA
+
+```{r}
+# Datos
+x1 <- 17
+x2 <- 19
+
+s1 <- 1.5
+s2 <- 1.8
+
+n1 <- 14
+n2 <- 25
+
+alpha <- 0.01
+
+# Varianza agrupada
+sp2 <- (((n1-1)*s1)+((n2-1)*s2))/
+       (n1+n2-2)
+
+sp <- sqrt(sp2)
+
+EE <- sp*sqrt((1/n1)+(1/n2))
+
+t <- qt(1-alpha/2,df=n1+n2-2)
+
+dif <- x1 - x2
+
+LI <- dif - t*EE
+LS <- dif + t*EE
+
+cat("IC =", LI, ",", LS)
+```
+
+## GRÁFICA
+
+```{r}
+confianza <- 0.99
+alpha <- 1-confianza
+gl <- 37
+
+t <- qt(1-alpha/2,df=gl)
+
+x <- seq(-5,5,length=1000)
+
+df <- data.frame(x=x,y=dt(x,df=gl))
+
+sombra <- subset(df,x>=-t & x<=t)
+
+ggplot(df,aes(x,y))+
+geom_line(color="navy",size=1.2)+
+geom_area(data=sombra,fill="skyblue",alpha=0.8)+
+geom_vline(xintercept=c(-t,t),linetype="dashed")+
+labs(title="Varianzas iguales")+
+theme_minimal()
+```
+:::
+
+# .Ejercicio 8 - Proporción de la población
+
+En una encuesta realizada a 300 estudiantes universitarios, 198 afirmaron usar transporte público para ir a la universidad. Construya un intervalo de confianza del (95%) para la verdadera proporción de estudiantes que utilizan transporte público.
+
+::: panel-tabset
+## RESPUESTA
+
+```{r}
+# Datos
+n <- 300
+x <- 198
+
+p <- x/n
+
+alpha <- 0.05
+
+z <- qnorm(1-alpha/2)
+
+EE <- sqrt((p*(1-p))/n)
+
+LI <- p - z*EE
+LS <- p + z*EE
+
+cat("IC =", LI, ",", LS)
+```
+
+## GRÁFICA
+
+```{r}
+confianza <- 0.95
+alpha <- 1-confianza
+z <- qnorm(1-alpha/2)
+
+x <- seq(-4,4,length=1000)
+
+df <- data.frame(x=x,y=dnorm(x))
+
+sombra <- subset(df,x>=-z & x<=z)
+
+ggplot(df,aes(x,y))+
+geom_line(color="darkorange",size=1.2)+
+geom_area(data=sombra,fill="gold",alpha=0.8)+
+geom_vline(xintercept=c(-z,z),linetype="dashed")+
+labs(title="IC Proporción")+
+theme_minimal()
+```
+:::
+
+# .Ejercicio 9 - Varianza de la población
+
+Una empresa desea analizar la variabilidad del tiempo de entrega de sus pedidos. Se seleccionó una muestra aleatoria de 18 entregas y se obtuvo una varianza muestral de (s\^2=16) horas². Suponiendo que los tiempos se distribuyen normalmente, construya un intervalo de confianza del (99%) para la verdadera varianza poblacional.
+
+::: panel-tabset
+## RESPUESTA
+
+```{r}
+# Datos
+n <- 18
+s2 <- 16
+
+alpha <- 0.01
+
+chi1 <- qchisq(alpha/2,df=n-1)
+chi2 <- qchisq(1-alpha/2,df=n-1)
+
+LI <- ((n-1)*s2)/chi2
+LS <- ((n-1)*s2)/chi1
+
+cat("IC =", LI, ",", LS)
+```
+
+## GRÁFICA
+
+```{r}
+confianza <- 0.99
+alpha <- 1-confianza
+gl <- 17
+
+chi1 <- qchisq(alpha/2,gl)
+chi2 <- qchisq(1-alpha/2,gl)
+
+x <- seq(0,40,length=1000)
+
+df <- data.frame(x=x,y=dchisq(x,df=gl))
+
+sombra <- subset(df,x>=chi1 & x<=chi2)
+
+ggplot(df,aes(x,y))+
+geom_line(color="purple",size=1.2)+
+geom_area(data=sombra,fill="violet",alpha=0.8)+
+geom_vline(xintercept=c(chi1,chi2),linetype="dashed")+
+labs(title="Distribución Chi-cuadrado")+
+theme_minimal()
+```
+:::
+
+# Ejercicio 10 - Cociente de las varianzas de dos poblaciones
+
+Dos máquinas producen piezas metálicas. Se quiere comparar la variabilidad en el peso de las piezas fabricadas. • Máquina A: $(n_1=12)$, $(s_1^2=25)$ • Máquina B: $(n_2=15)$, $(s_2^2=10)$ Suponiendo normalidad en ambas poblaciones, construya un intervalo de confianza del (95%) para el cociente de varianzas:
+
+$$\frac{\sigma_1^2}{\sigma_2^2}$$
+
+::: panel-tabset
+## RESPUESTA
+
+```{r}
+# Datos
+n1 <- 12
+n2 <- 15
+
+s1 <- 25
+s2 <- 10
+
+alpha <- 0.05
+
+F1 <- qf(alpha/2,df1=n1-1,df2=n2-1)
+F2 <- qf(1-alpha/2,df1=n1-1,df2=n2-1)
+
+razon <- s1/s2
+
+LI <- razon/F2
+LS <- razon/F1
+
+cat("IC =", LI, ",", LS)
+```
+
+## GRÁFICA
+
+```{r}
+confianza <- 0.95
+alpha <- 1-confianza
+
+gl1 <- 11
+gl2 <- 14
+
+F1 <- qf(alpha/2,gl1,gl2)
+F2 <- qf(1-alpha/2,gl1,gl2)
+
+x <- seq(0,6,length=1000)
+
+df <- data.frame(x=x,y=df(x,gl1,gl2))
+
+sombra <- subset(df,x>=F1 & x<=F2)
+
+ggplot(df,aes(x,y))+
+geom_line(color="brown",size=1.2)+
+geom_area(data=sombra,fill="tan",alpha=0.8)+
+geom_vline(xintercept=c(F1,F2),linetype="dashed")+
+labs(title="Distribución F")+
+theme_minimal()
+```
+:::
+
+# .Ejercicio 11 - Diferencia de las proporciones de dos poblaciones
+
+En una empresa se desea comparar el porcentaje de empleados satisfechos entre dos sucursales.
+
+- En la sucursal A, 84 de 120 empleados dijeron estar satisfechos.
+
+- En la sucursal B, 65 de 110 empleados dijeron estar satisfechos.
+
+Construya un intervalo de confianza del (90%) para la diferencia verdadera entre las proporciones de empleados satisfechos de ambas sucursales.
+
+::: panel-tabset
+## RESPUESTA
+
+```{r}
+# Datos
+x1 <- 84
+n1 <- 120
+
+x2 <- 65
+n2 <- 110
+
+p1 <- x1/n1
+p2 <- x2/n2
+
+dif <- p1 - p2
+
+alpha <- 0.10
+
+z <- qnorm(1-alpha/2)
+
+EE <- sqrt((p1*(1-p1))/n1 +
+           (p2*(1-p2))/n2)
+
+LI <- dif - z*EE
+LS <- dif + z*EE
+
+cat("IC =", LI, ",", LS)
+```
+
+## GRÁFICA
+
+```{r}
+confianza <- 0.90
+alpha <- 1-confianza
+z <- qnorm(1-alpha/2)
+
+x <- seq(-4,4,length=1000)
+
+df <- data.frame(x=x,y=dnorm(x))
+
+sombra <- subset(df,x>=-z & x<=z)
+
+ggplot(df,aes(x,y))+
+geom_line(color="darkcyan",size=1.2)+
+geom_area(data=sombra,fill="cyan",alpha=0.8)+
+geom_vline(xintercept=c(-z,z),linetype="dashed")+
+labs(title="Diferencia de proporciones")+
+theme_minimal()
+```
+:::
